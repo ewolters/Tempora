@@ -12,60 +12,73 @@ Features:
 - Production hardening (rate limiting, TLS, health monitoring)
 
 Standard: TEMPORA-HA-001
+
+Quick Start:
+    from tempora import schedule_task
+
+    # One-time task
+    schedule_task(
+        name="send_email",
+        func="myapp.tasks.send_email",
+        args={"user_id": 123},
+    )
+
+    # Recurring task
+    schedule_task(
+        name="daily_cleanup",
+        func="myapp.tasks.cleanup",
+        cron="0 2 * * *"
+    )
 """
 
 __version__ = "1.0.0"
 __author__ = "Tempora Contributors"
 __license__ = "MIT OR Commercial"
 
+# Simple API (recommended for most uses)
+from tempora.scheduler import (
+    schedule_task,
+    get_task_status,
+    cancel_task,
+    get_cluster_health,
+)
+
+# Coordination layer
 from tempora.coordination import (
-    # Protocol
-    Message,
     MessageType,
+    Message,
     ProtocolError,
-    # Server
     CoordinationServer,
-    CoordinationServerConfig,
-    # Client
     CoordinationClient,
     PeerConnection,
     ConnectionPool,
-    # Heartbeat
     HeartbeatManager,
     HeartbeatConfig,
     PeerHealth,
-    HealthStatus,
-    # Transport
     Connection,
     TransportLayer,
-    TransportConfig,
 )
 
+# Distributed layer
 from tempora.distributed import (
-    # Election
     LeaderElector,
     ElectionConfig,
     ElectionState,
     NodeRole,
     VoteRequest,
     VoteResponse,
-    # Replication
     StateReplicator,
     ReplicationConfig,
     FollowerProgress,
     LogEntryData,
-    NotLeaderError,
-    # Coordinator
     DistributedCoordinator,
     DistributedConfig,
-    # Work Distribution
     WorkDistributor,
     WorkDistributionConfig,
     DistributionStrategy,
     MemberLoad,
     TaskAssignment,
     NoAvailableMembersError,
-    # Hardening
     ElectionRateLimiter,
     ConnectionRateLimiter,
     SplitBrainDetector,
@@ -79,14 +92,17 @@ from tempora.distributed import (
 __all__ = [
     # Version
     "__version__",
+    # Simple API
+    "schedule_task",
+    "get_task_status",
+    "cancel_task",
+    "get_cluster_health",
     # Protocol
-    "Message",
     "MessageType",
+    "Message",
     "ProtocolError",
-    # Server
+    # Server/Client
     "CoordinationServer",
-    "CoordinationServerConfig",
-    # Client
     "CoordinationClient",
     "PeerConnection",
     "ConnectionPool",
@@ -94,11 +110,9 @@ __all__ = [
     "HeartbeatManager",
     "HeartbeatConfig",
     "PeerHealth",
-    "HealthStatus",
     # Transport
     "Connection",
     "TransportLayer",
-    "TransportConfig",
     # Election
     "LeaderElector",
     "ElectionConfig",
@@ -111,7 +125,6 @@ __all__ = [
     "ReplicationConfig",
     "FollowerProgress",
     "LogEntryData",
-    "NotLeaderError",
     # Coordinator
     "DistributedCoordinator",
     "DistributedConfig",
